@@ -9,7 +9,7 @@ Azure Queue transport for Symfony's Messenger component.
 
 The messenger-azure-queue-transport component requires PHP 7.3+ and Symfony 4.3+.
 
-You can install the bundle using Symfony Flex:
+You can install this component using Symfony Flex:
 
 ```
 composer require alexandrubau/messenger-azure-queue-transport
