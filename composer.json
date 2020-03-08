@@ -1,0 +1,33 @@
+{
+    "name": "alexandrubau/messenger-azure-queue-transport",
+    "type": "symfony-bundle",
+    "description": "Azure Storage Queue transport for Symfony's Messenger component.",
+    "keywords": ["symfony", "bundle", "messenger", "transport" ,"azure", "storage", "queue"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alexandru Bau",
+            "email": "alexandru.bau@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Abau\\MessengerAzureQueueTransport\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^7.3",
+        "symfony/config": "^4.3|^5.0",
+        "symfony/dependency-injection": "^4.3|^5.0",
+        "symfony/http-kernel": "^4.3|^5.0",
+        "symfony/messenger": "^4.3|^5.0",
+        "microsoft/azure-storage-queue": "^1.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.0",
+        "symfony/var-dumper": "^4.3|^5.0"
+    },
+    "scripts": {
+        "test": "phpunit tests --testdox"
+    }
+}

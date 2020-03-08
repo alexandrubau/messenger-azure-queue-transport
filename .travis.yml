@@ -1,0 +1,33 @@
+language: php
+
+matrix:
+  include:
+    - php: 7.3
+      dist: bionic
+      env: COMPOSER_OPTS=""
+    - php: 7.3
+      dist: bionic
+      env: COMPOSER_OPTS="--prefer-lowest"
+    - php: 7.4
+      dist: bionic
+      env: COMPOSER_OPTS=""
+    - php: 7.4
+      dist: bionic
+      env: COMPOSER_OPTS="--prefer-lowest"
+    - php: nightly
+      dist: bionic
+      env: COMPOSER_OPTS="--ignore-platform-reqs"
+    - php: nightly
+      dist: bionic
+      env: COMPOSER_OPTS="--ignore-platform-reqs --prefer-lowest"
+  allow_failures:
+    - php: nightly
+      env: COMPOSER_OPTS="--ignore-platform-reqs"
+    - php: nightly
+      env: COMPOSER_OPTS="--ignore-platform-reqs --prefer-lowest"
+
+install:
+  - travis_retry composer update --prefer-dist $COMPOSER_OPTS
+
+script:
+  - composer test
