@@ -37,17 +37,17 @@ class Message
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getBody(): ?string
+    public function getBody(): string
     {
         return $this->body;
     }
 
     /**
-     * @return array|null
+     * @return array
      */
-    public function getHeaders(): ?array
+    public function getHeaders(): array
     {
         return $this->headers;
     }

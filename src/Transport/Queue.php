@@ -44,7 +44,7 @@ class Queue
     /**
      * Reads messages from the queue.
      *
-     * @return Message[]|array
+     * @return Message[]
      */
     public function get(): array
     {
@@ -90,7 +90,7 @@ class Queue
     /**
      * Deletes message from queue.
      *
-     * @param Message|string|mixed $messageId The message object or the messageId
+     * @param Message|string $messageId The message object or the messageId
      * @param string|null $popReceipt
      */
     public function delete($messageId, string $popReceipt = null): void
