@@ -20,7 +20,7 @@ composer require alexandrubau/messenger-azure-queue-transport
 Set environment variable:
 
 ```
-MESSENGER_TRANSPORT_DSN=azurequeue://<account_name>:<account_key>/default
+MESSENGER_TRANSPORT_DSN=azurequeue://<account_name>:<account_key>@default
 ```
 
 In case your Account Name or Account Key contain special characters, you can use PHP's `rawurlencode()` function to encode them.
