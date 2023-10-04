@@ -168,7 +168,7 @@ class Queue
      */
     private function encodeMessage(Message $message): string
     {
-        return base64_encode(serialize($message->getBody()));
+        return base64_encode($message->getBody());
     }
 
     /**
