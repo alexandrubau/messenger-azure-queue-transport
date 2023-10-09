@@ -84,6 +84,7 @@ class MaxMessageFailedSizeListener implements EventSubscriberInterface
         }
 
         $this->cleanupStackTrace($previous);
+        $previous->setPrevious(null);
 
         return $stamp;
     }
