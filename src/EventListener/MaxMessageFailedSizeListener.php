@@ -25,6 +25,10 @@ class MaxMessageFailedSizeListener implements EventSubscriberInterface
         $this->serializer = $serializer;
     }
 
+    /**
+     * @param WorkerMessageFailedEvent $event
+     * @return void
+     */
     public function onMessageFailed(WorkerMessageFailedEvent $event): void
     {
         $envelope = $event->getEnvelope();
@@ -55,6 +59,9 @@ class MaxMessageFailedSizeListener implements EventSubscriberInterface
         }
     }
 
+    /**
+     * @return array[]
+     */
     public static function getSubscribedEvents(): array
     {
         return [
@@ -64,6 +71,10 @@ class MaxMessageFailedSizeListener implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * @param StampInterface $stamp
+     * @return StampInterface
+     */
     private function processStamp(StampInterface $stamp): StampInterface
     {
         // `RedeliveryStamp::getFlattenException()` was removed in symfony 6.0
@@ -89,6 +100,10 @@ class MaxMessageFailedSizeListener implements EventSubscriberInterface
         return $stamp;
     }
 
+    /**
+     * @param FlattenException $flattenException
+     * @return void
+     */
     private function cleanupStackTrace(FlattenException $flattenException): void
     {
         $trace = array_slice($flattenException->getTrace(), 0, self::MAX_STACK_TRACE_ITEMS);
