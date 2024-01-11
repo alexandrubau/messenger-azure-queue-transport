@@ -73,11 +73,17 @@ class QueueTransportFactory implements TransportFactoryInterface
                 continue;
             }
 
-            $options[$key] = match (self::OPTIONS_TYPE_MAPPING[$key]) {
-                'integer' => filter_var($value, \FILTER_VALIDATE_INT),
-                'string' => (string)$value,
-                default => $value,
-            };
+            switch (self::OPTIONS_TYPE_MAPPING[$key]) {
+                case 'integer':
+                    $options[$key] = filter_var($value, \FILTER_VALIDATE_INT);
+                    break;
+                case 'string':
+                    $options[$key] = (string)$value;
+                    break;
+                default:
+                    $options[$key] = $value;
+                    break;
+            }
         }
 
         return $options;
