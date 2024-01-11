@@ -39,6 +39,7 @@ framework:
                     time_to_live: <time_to_live_in_seconds>
                     results_limit: <how_many_messages_to_read>
 ```
+Options can be configured via the DSN or via the options key under the transport in ```messenger.yaml```
 
 Don't forget to create the queue with the supplied name in Azure Queue Storage.
 
