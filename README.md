@@ -40,6 +40,12 @@ framework:
                     results_limit: <how_many_messages_to_read>
 ```
 
+Options can be configured via the DSN or via the options key under the transport in `messenger.yaml`. Example:
+
+```
+MESSENGER_TRANSPORT_DSN=azurequeue://<account_name>:<account_key>@default?queue_name=<your_queue_name>&visibility_timeout=<visibility_timeout_in_seconds>&time_to_live=<time_to_live_in_seconds>&results_limit=<how_many_messages_to_read>
+```
+
 Don't forget to create the queue with the supplied name in Azure Queue Storage.
 
 ## Further reading

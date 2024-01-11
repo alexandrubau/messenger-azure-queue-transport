@@ -40,4 +40,28 @@ class QueueTransportFactoryTest extends TestCase
     {
         $this->assertInstanceOf(QueueTransport::class, self::$factory->createTransport('', [], $this->serializer));
     }
+
+    public function testCanDefineOptionsInDsn(): void
+    {
+        $options = [
+            'queue_name' => 'queue_from_options',
+            'visibility_timeout' => 0,
+            'time_to_live' => 0,
+            'results_limit' => 0,
+        ];
+
+        $dsn = 'azurequeue://username:password@default?queue_name=queue_from_dsn&visibility_timeout=1&time_to_live=1&results_limit=1';
+
+        $transport = self::$factory->createTransport($dsn, $options, $this->serializer);
+
+        $reflectionClass = new ReflectionClass($transport);
+        $reflectionProperty = $reflectionClass->getProperty('options');
+        $reflectionProperty->setAccessible(true);
+        $transportOptions = $reflectionProperty->getValue($transport);
+
+        $this->assertSame('queue_from_dsn', $transportOptions['queue_name']);
+        $this->assertSame(1, $transportOptions['visibility_timeout']);
+        $this->assertSame(1, $transportOptions['time_to_live']);
+        $this->assertSame(1, $transportOptions['results_limit']);
+    }
 }
