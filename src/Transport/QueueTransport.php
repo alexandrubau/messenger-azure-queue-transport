@@ -3,13 +3,14 @@
 namespace Abau\MessengerAzureQueueTransport\Transport;
 
 use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 
 /**
  * Class QueueTransport
  */
-class QueueTransport implements TransportInterface
+class QueueTransport implements TransportInterface, MessageCountAwareInterface
 {
     /**
      * @var string
@@ -89,6 +90,14 @@ class QueueTransport implements TransportInterface
     public function send(Envelope $envelope): Envelope
     {
         return $this->getSender()->send($envelope);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMessageCount(): int
+    {
+        return $this->getQueue()->getMessageCount();
     }
 
     /**

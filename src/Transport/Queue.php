@@ -117,6 +117,16 @@ class Queue
     }
 
     /**
+     * Retrieves the message count.
+     *
+     * @return int
+     */
+    public function getMessageCount(): int
+    {
+        return $this->client->getQueueMetadata($this->getOption('queue_name'))->getApproximateMessageCount();
+    }
+
+    /**
      * Creates Azure Storage Queue client.
      *
      * @return QueueRestProxy
