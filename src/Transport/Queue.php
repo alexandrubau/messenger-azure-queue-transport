@@ -4,6 +4,7 @@ namespace Abau\MessengerAzureQueueTransport\Transport;
 
 use MicrosoftAzure\Storage\Queue\Models\CreateMessageOptions;
 use MicrosoftAzure\Storage\Queue\Models\ListMessagesOptions;
+use MicrosoftAzure\Storage\Queue\Models\PeekMessagesOptions;
 use MicrosoftAzure\Storage\Queue\Models\QueueMessage;
 use MicrosoftAzure\Storage\Queue\QueueRestProxy;
 
@@ -12,6 +13,11 @@ use MicrosoftAzure\Storage\Queue\QueueRestProxy;
  */
 class Queue
 {
+    /**
+     * Azure Storage Queue allows to peek a maximum of 32 messages.
+     */
+    const NUMBER_OF_MESSAGES_TO_PEEK = 32;
+
     /**
      * @var string
      */
@@ -124,6 +130,29 @@ class Queue
     public function getMessageCount(): int
     {
         return $this->client->getQueueMetadata($this->getOption('queue_name'))->getApproximateMessageCount();
+    }
+
+    /**
+     * Retrieves messages from the front of the queue, without changing
+     *  the message visibility.
+     *
+     * @return array
+     */
+    public function peekMessages(): array
+    {
+        $options = new PeekMessagesOptions();
+        $options->setNumberOfMessages(self::NUMBER_OF_MESSAGES_TO_PEEK);
+
+        $list = $this->client->peekMessages($this->getOption('queue_name'), $options);
+        $list = $list->getQueueMessages();
+
+        return array_map(function (QueueMessage $queueMessage) {
+            $message = $this->decodeMessage($queueMessage->getMessageText());
+            $message->setOriginal($queueMessage);
+
+            return $message;
+
+        }, $list);
     }
 
     /**

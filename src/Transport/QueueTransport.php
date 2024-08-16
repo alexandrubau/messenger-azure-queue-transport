@@ -3,6 +3,7 @@
 namespace Abau\MessengerAzureQueueTransport\Transport;
 
 use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Transport\Receiver\ListableReceiverInterface;
 use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
@@ -10,7 +11,7 @@ use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 /**
  * Class QueueTransport
  */
-class QueueTransport implements TransportInterface, MessageCountAwareInterface
+class QueueTransport implements TransportInterface, MessageCountAwareInterface, ListableReceiverInterface
 {
     /**
      * @var string
@@ -128,5 +129,27 @@ class QueueTransport implements TransportInterface, MessageCountAwareInterface
     private function getSender(): QueueSender
     {
         return $this->sender ?? $this->sender = new QueueSender($this->getQueue(), $this->serializer);
+    }
+
+    /**
+     * Returns all the messages (up to the limit) in this receiver.
+     *
+     * Messages should be given the same stamps as when using ReceiverInterface::get().
+     *
+     * @return Envelope[]|iterable
+     */
+    public function all(?int $limit = null): iterable
+    {
+        return $this->getReceiver()->peekMessages();
+    }
+
+    /**
+     * Returns the Envelope by id or none.
+     *
+     * Message should be given the same stamps as when using ReceiverInterface::get().
+     */
+    public function find(mixed $id): ?Envelope
+    {
+        throw new \Exception('Azure Storage Queues do not support message lookup by id');
     }
 }
