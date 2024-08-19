@@ -59,6 +59,30 @@ class QueueReceiver implements ReceiverInterface
     }
 
     /**
+     * Returns all the messages (up to the limit) in this receiver.
+     *
+     * Messages should be given the same stamps as when using ReceiverInterface::get().
+     *
+     * @return Envelope[]|iterable
+     */
+    public function peekMessages(): iterable
+    {
+        try {
+
+            $messages = $this->queue->peekMessages();
+
+        } catch (\Exception $error) {
+            throw new TransportException($error->getMessage(), 0 , $error);
+        }
+
+        return array_map(function (Message $message) {
+
+            return $this->createEnvelopeFromMessage($message);
+
+        }, $messages);
+    }
+
+    /**
      * @inheritDoc
      */
     public function ack(Envelope $envelope): void
