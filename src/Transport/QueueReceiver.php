@@ -6,6 +6,7 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\LogicException;
 use Symfony\Component\Messenger\Exception\MessageDecodingFailedException;
 use Symfony\Component\Messenger\Exception\TransportException;
+use Symfony\Component\Messenger\Stamp\RedeliveryStamp;
 use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
@@ -130,10 +131,16 @@ class QueueReceiver implements ReceiverInterface
             throw $exception;
         }
 
-        return $envelope->with(
+        $stamps = [
             new TransportMessageIdStamp($message->getOriginal()->getMessageId()),
             new QueueReceivedStamp($message->getOriginal()->getPopReceipt())
-        );
+        ];
+
+        if ($message->getOriginal()->getDequeueCount() > 1) {
+            $stamps[] = new RedeliveryStamp($message->getOriginal()->getDequeueCount());
+        }
+
+        return $envelope->with(...$stamps);
     }
 
     /**
