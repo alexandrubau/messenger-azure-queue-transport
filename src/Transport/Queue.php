@@ -175,12 +175,29 @@ class Queue
      */
     private function getConnectionString(string $dsn): string
     {
-        $connection = 'DefaultEndpointsProtocol=https;AccountName=%s;AccountKey=%s';
+        $parsed = parse_url($dsn);
+        $name = rawurldecode($parsed['user'] ?? 'devstoreaccount1');
+        $key = rawurldecode($parsed['pass'] ?? '');
+        $host = $parsed['host'] ?? '';
+        $path = $parsed['path'] ?? '';
+        $protocol = 'https';
 
-        $name = rawurldecode(parse_url($dsn, PHP_URL_USER));
-        $key = rawurldecode(parse_url($dsn, PHP_URL_PASS));
+        // parse_url treats '@http://...' as host='http', path='//...'
+        // We need to extract the real endpoint URL if present
+        if (in_array($host, ['http', 'https'], true) && isset($path) && strpos($path, '//') === 0) {
+            $endpointUrl = $host . $path;
+            $endpointParsed = parse_url($endpointUrl);
+            $protocol = $endpointParsed['scheme'] ?? 'http';
+            $host = $endpointParsed['host'] ?? '';
+            $path = $endpointParsed['path'] ?? '/';
+        }
 
-        return sprintf($connection, $name, $key);
+        if ($host === '' || $host === 'default') {
+            return sprintf('DefaultEndpointsProtocol=%s;AccountName=%s;AccountKey=%s', $protocol, $name, $key);
+        }
+
+        $endpoint = rtrim($protocol . '://' . $host, '/') . ($path !== '' && $path !== '/' ? '/' . ltrim($path, '/') : '');
+        return sprintf('DefaultEndpointsProtocol=%s;AccountName=%s;AccountKey=%s;QueueEndpoint=%s', $protocol, $name, $key, $endpoint);
     }
 
     /**
